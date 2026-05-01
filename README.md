@@ -2,9 +2,36 @@
 
 YAML parsing utilities for Zig. Key-value extraction, indentation tracking, list items, type inference.
 
-Parse YAML line-by-line. Extract key-value pairs, track indentation levels, detect list items and document separators, infer value types.
+## The pitch
 
-## Quick start
+Parse YAML line-by-line. Extract key-value pairs, track indentation levels, detect list items.
+
+```zig
+const zioyaml = @import("zioyaml");
+
+// Parse key-value pairs
+const kv = zioyaml.parseKeyValue("name: Alice").?;
+// kv.key == "name", kv.value == "Alice"
+
+// Track indentation
+const indent = zioyaml.indentLevel("    nested: true"); // 4
+
+// Detect list items
+if (zioyaml.isListItem("- item one")) {
+    const val = zioyaml.parseListItem("- item one").?; // "item one"
+}
+
+// Infer value types
+const t = zioyaml.inferType("30");      // .integer
+const t2 = zioyaml.inferType("3.14");   // .float
+const t3 = zioyaml.inferType("null");   // .null
+
+// Detect structure
+zioyaml.isComment("# comment");           // true
+zioyaml.isDocumentSeparator("---");       // true
+```
+
+## Install
 
 ```bash
 zig fetch --save git+https://github.com/deblasis/zioyaml
@@ -22,33 +49,13 @@ exe.root_module.addImport("zioyaml", dep.module("zioyaml"));
 
 Requires Zig 0.16.
 
-## Example output
-
-`zig build run-example` produces:
-
-```
-=== zioyaml example ===
-
-Parsing YAML lines:
-  name: Alice (string, indent=0)
-  age: 30 (integer, indent=0)
-  active: true (boolean, indent=0)
-  score: 95.5 (float, indent=0)
-  address: null (null, indent=0)
-  - item one (list item)
-  --- (DOC SEPARATOR)
-```
-
-See [examples/example.zig](examples/example.zig) for the source.
-
 ## API
 
-- `parseKeyValue(line)` — extract key and value from a YAML line
+- `parseKeyValue(line)` — extract key and value
 - `indentLevel(line)` — count leading spaces
-- `isListItem(line)` — detect `- item` syntax
-- `parseListItem(line)` — extract list item value
+- `isListItem(line)` / `parseListItem(line)` — list syntax
 - `inferType(value)` — detect string/integer/float/boolean/null
-- `isComment(line)` / `isDocumentSeparator(line)` — detect special lines
+- `isComment(line)` / `isDocumentSeparator(line)`
 
 ## Compatibility
 
