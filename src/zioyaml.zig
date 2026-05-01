@@ -165,3 +165,30 @@ test "parseBool" {
     try std.testing.expectEqual(false, parseBool("false").?);
     try std.testing.expect(parseBool("yes") == null);
 }
+
+test "parseKeyValue with spaces" {
+    const result = parseKeyValue("  name  :  Alice  ").?;
+    try std.testing.expectEqualStrings("name", result.key);
+    try std.testing.expectEqualStrings("Alice", result.value);
+}
+
+test "indentLevel tabs" {
+    try std.testing.expectEqual(@as(usize, 0), indentLevel("no indent"));
+    try std.testing.expectEqual(@as(usize, 4), indentLevel("    four spaces"));
+}
+
+test "isListItem negative" {
+    try std.testing.expect(!isListItem("not a list item"));
+    try std.testing.expect(!isListItem(""));
+}
+
+test "parseListItem returns value" {
+    try std.testing.expectEqualStrings("hello", parseListItem("- hello").?);
+    try std.testing.expect(parseListItem("not a list") == null);
+}
+
+test "inferType float and null" {
+    try std.testing.expectEqual(ValueType.float_type, inferType("3.14"));
+    try std.testing.expectEqual(ValueType.null_type, inferType("null"));
+    try std.testing.expectEqual(ValueType.string_type, inferType("some text"));
+}
