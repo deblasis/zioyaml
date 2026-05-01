@@ -1,66 +1,61 @@
 # zioyaml
 
-YAML parser for Zig
+YAML parsing utilities for Zig. Key-value extraction, indentation tracking, list items, type inference.
 
-YAML parser for Zig. Full YAML 1.2 support, streaming parser, and comptime schema validation. Handles anchors, aliases, and multi-document streams.
+Parse YAML line-by-line. Extract key-value pairs, track indentation levels, detect list items and document separators, infer value types.
 
-## Features
+## Quick start
 
-- YAML 1.2 core schema
-- streaming parser
-- anchor/alias support
-- multi-document streams
-
-## Quick Start
-
-```zig
-const zioyaml = @import("zioyaml");
-
-pub fn main() !void {
-    // See examples/ for runnable code
-}
-```
-
-## Installation
-
-Add to your `build.zig.zon`:
-
-```zig
-.{
-    .dependencies = .{
-        .zioyaml = .{ .url = "https://github.com/deblasis/zioyaml/archive/refs/heads/main.tar.gz", .hash = "..." },
-    },
-}
+```bash
+zig fetch --save git+https://github.com/deblasis/zioyaml
 ```
 
 Then in your `build.zig`:
 
 ```zig
-const zioyaml = b.dependency("zioyaml", .{
+const dep = b.dependency("zioyaml", .{
     .target = target,
     .optimize = optimize,
 });
-exe.root_module.addImport("zioyaml", zioyaml.module("zioyaml"));
+exe.root_module.addImport("zioyaml", dep.module("zioyaml"));
 ```
 
-## Examples
+Requires Zig 0.16.
 
-Run the included example:
+## Example output
 
-```bash
-zig build run-example
+`zig build run-example` produces:
+
+```
+=== zioyaml example ===
+
+Parsing YAML lines:
+  name: Alice (string, indent=0)
+  age: 30 (integer, indent=0)
+  active: true (boolean, indent=0)
+  score: 95.5 (float, indent=0)
+  address: null (null, indent=0)
+  - item one (list item)
+  --- (DOC SEPARATOR)
 ```
 
-## API Reference
+See [examples/example.zig](examples/example.zig) for the source.
 
-See [src/zioyaml.zig](src/zioyaml.zig) for full documentation. All public symbols have doc comments.
+## API
+
+- `parseKeyValue(line)` — extract key and value from a YAML line
+- `indentLevel(line)` — count leading spaces
+- `isListItem(line)` — detect `- item` syntax
+- `parseListItem(line)` — extract list item value
+- `inferType(value)` — detect string/integer/float/boolean/null
+- `isComment(line)` / `isDocumentSeparator(line)` — detect special lines
 
 ## Compatibility
 
-- **Zig:** 0.16.0
-- **Platforms:** Linux, macOS, Windows
-- **Breaking changes:** Follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html). Minor versions may add features, patch versions fix bugs.
+- **Zig**: 0.16.0
+- **Platforms**: Linux, macOS, Windows
+- **Breaking changes**: follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html). Minor versions add features, patch versions fix bugs.
 
 ## License
 
-MIT
+MIT. Copyright (c) 2026 Alessandro De Blasis.
