@@ -192,3 +192,25 @@ test "inferType float and null" {
     try std.testing.expectEqual(ValueType.null_type, inferType("null"));
     try std.testing.expectEqual(ValueType.string_type, inferType("some text"));
 }
+
+test "isComment hash" {
+    try std.testing.expect(isComment("# this is a comment"));
+    try std.testing.expect(!isComment("not a comment"));
+}
+
+test "isDocumentSeparator" {
+    try std.testing.expect(isDocumentSeparator("---"));
+    try std.testing.expect(!isDocumentSeparator("--- "));
+    try std.testing.expect(!isDocumentSeparator("---extra"));
+}
+
+test "indentLevel mixed" {
+    try std.testing.expectEqual(@as(usize, 2), indentLevel("  two"));
+    try std.testing.expectEqual(@as(usize, 6), indentLevel("      six"));
+}
+
+test "parseKeyValue with quoted value" {
+    const result = parseKeyValue("name: \"Alice\"").?;
+    try std.testing.expectEqualStrings("name", result.key);
+    try std.testing.expectEqualStrings("\"Alice\"", result.value);
+}
