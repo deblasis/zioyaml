@@ -51,12 +51,12 @@ Requires Zig 0.16.
 
 ## API
 
-- `parseKeyValue(line)` — extract key and value
-- `indentLevel(line)` — count leading spaces
-- `isListItem(line)` / `parseListItem(line)` — list syntax
-- `inferType(value)` — detect string/integer/float/boolean/null
+- `parseKeyValue(line)` - extract key and value
+- `indentLevel(line)` - count leading spaces
+- `isListItem(line)` / `parseListItem(line)` - list syntax
+- `inferType(value)` - detect string/integer/float/boolean/null
 - `isComment(line)` / `isDocumentSeparator(line)`
-- `parseBool(value)` — parse "true" or "false", null otherwise
+- `parseBool(value)` - parse "true" or "false", null otherwise
 
 This is not a full YAML parser. It has no document tree, no anchors or aliases and no schema validation.
 
