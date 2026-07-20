@@ -24,7 +24,7 @@ if (zioyaml.isListItem("- item one")) {
 // Infer value types
 const t = zioyaml.inferType("30");      // .integer
 const t2 = zioyaml.inferType("3.14");   // .float
-const t3 = zioyaml.inferType("null");   // .null
+const t3 = zioyaml.inferType("null");   // .null_
 
 // Detect structure
 zioyaml.isComment("# comment");           // true
@@ -56,6 +56,9 @@ Requires Zig 0.16.
 - `isListItem(line)` / `parseListItem(line)` — list syntax
 - `inferType(value)` — detect string/integer/float/boolean/null
 - `isComment(line)` / `isDocumentSeparator(line)`
+- `parseBool(value)` — parse "true" or "false", null otherwise
+
+This is not a full YAML parser. It has no document tree, no anchors or aliases and no schema validation.
 
 ## Compatibility
 

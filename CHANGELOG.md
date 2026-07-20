@@ -9,7 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Initial release
-- YAML 1.2 core schema
-- streaming parser
-- anchor/alias support
-- multi-document streams
+- line based key/value parsing with quote stripping and inline comment removal
+- indentation level counting
+- list item detection and parsing
+- value type inference (string, integer, float, boolean, null)
+- comment and document separator detection
+- boolean parsing

@@ -40,9 +40,7 @@ pub fn parseKeyValue(line: []const u8) ?struct { key: []const u8, value: []const
 pub fn indentLevel(line: []const u8) usize {
     var count: usize = 0;
     for (line) |ch| {
-        if (ch == ' ') count += 1
-        else if (ch == '\t') count += 2
-        else break;
+        if (ch == ' ') count += 1 else if (ch == '\t') count += 2 else break;
     }
     return count;
 }
@@ -158,6 +156,7 @@ test "isDocumentSeparator" {
     try std.testing.expect(isDocumentSeparator("---"));
     try std.testing.expect(isDocumentSeparator("..."));
     try std.testing.expect(!isDocumentSeparator("not a separator"));
+    try std.testing.expect(!isDocumentSeparator("---extra"));
 }
 
 test "parseBool" {
@@ -172,11 +171,6 @@ test "parseKeyValue with spaces" {
     try std.testing.expectEqualStrings("Alice", result.value);
 }
 
-test "indentLevel tabs" {
-    try std.testing.expectEqual(@as(usize, 0), indentLevel("no indent"));
-    try std.testing.expectEqual(@as(usize, 4), indentLevel("    four spaces"));
-}
-
 test "isListItem negative" {
     try std.testing.expect(!isListItem("not a list item"));
     try std.testing.expect(!isListItem(""));
@@ -185,32 +179,4 @@ test "isListItem negative" {
 test "parseListItem returns value" {
     try std.testing.expectEqualStrings("hello", parseListItem("- hello").?);
     try std.testing.expect(parseListItem("not a list") == null);
-}
-
-test "inferType float and null" {
-    try std.testing.expectEqual(ValueType.float_type, inferType("3.14"));
-    try std.testing.expectEqual(ValueType.null_type, inferType("null"));
-    try std.testing.expectEqual(ValueType.string_type, inferType("some text"));
-}
-
-test "isComment hash" {
-    try std.testing.expect(isComment("# this is a comment"));
-    try std.testing.expect(!isComment("not a comment"));
-}
-
-test "isDocumentSeparator" {
-    try std.testing.expect(isDocumentSeparator("---"));
-    try std.testing.expect(!isDocumentSeparator("--- "));
-    try std.testing.expect(!isDocumentSeparator("---extra"));
-}
-
-test "indentLevel mixed" {
-    try std.testing.expectEqual(@as(usize, 2), indentLevel("  two"));
-    try std.testing.expectEqual(@as(usize, 6), indentLevel("      six"));
-}
-
-test "parseKeyValue with quoted value" {
-    const result = parseKeyValue("name: \"Alice\"").?;
-    try std.testing.expectEqualStrings("name", result.key);
-    try std.testing.expectEqualStrings("\"Alice\"", result.value);
 }

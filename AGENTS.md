@@ -2,7 +2,7 @@
 
 ## Overview
 
-YAML parser for Zig. Full YAML 1.2 support, streaming parser, and comptime schema validation. Handles anchors, aliases, and multi-document streams.
+Small YAML line parsing helpers for Zig. It works one line at a time: key/value extraction, indentation counting, list items, comments, document separators and simple type inference. It is not a full YAML parser. There is no document tree, no anchors or aliases, and no schema validation.
 
 ## Project Structure
 
